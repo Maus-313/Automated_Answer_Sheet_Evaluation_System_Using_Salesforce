@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotification xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>Bulk_Processing_Complete</customNotifTypeName>
+    <description>Notification sent when bulk processing is completed</description>
+    <desktop>true</desktop>
+    <email>true</email>
+    <masterLabel>Bulk Processing Complete</masterLabel>
+    <mobile>true</mobile>
+</CustomNotification>

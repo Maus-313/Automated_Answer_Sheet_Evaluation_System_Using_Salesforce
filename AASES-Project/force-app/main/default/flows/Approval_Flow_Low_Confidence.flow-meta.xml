@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Approval_Request</name>
+        <label>Send Approval Request</label>
+        <locationX>176</locationX>
+        <locationY>239</locationY>
+        <actionName>Submit_Approval_Request</actionName>
+        <actionType>submit</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>objectId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+            <name>approvalProcessName</name>
+            <value>
+                <stringValue>Manual_Evaluation_Approval</stringValue>
+            </value>
+        </inputParameters>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Notify_Senior_Evaluator</name>
+        <label>Notify Senior Evaluator</label>
+        <locationX>176</locationX>
+        <locationY>359</locationY>
+        <actionName>Send_Manual_Evaluation_Email</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailTemplateId</name>
+            <value>
+                <stringValue>0H73j0000008OlSCAU</stringValue>
+            </value>
+            <name>recipientId</name>
+            <value>
+                <elementReference>Senior_Evaluator_Id</elementReference>
+            </value>
+        </inputParameters>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <actionCalls>
+        <name>Create_Manual_Task</name>
+        <label>Create Manual Task</label>
+        <locationX>176</locationX>
+        <locationY>479</locationY>
+        <actionName>Create_Manual_Evaluation_Task</actionName>
+        <actionType>create</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <object>Task</object>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Manual Evaluation Required - {!$Record.Name__c}</stringValue>
+            </value>
+            <name>OwnerId</name>
+            <value>
+                <elementReference>Senior_Evaluator_Id</elementReference>
+            </value>
+            <name>Status</name>
+            <value>
+                <stringValue>Not Started</stringValue>
+            </value>
+            <name>Priority</name>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+            <name>ActivityDate</name>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+            <name>Description</name>
+            <value>
+                <stringValue>AI evaluation confidence was below threshold. Please review and provide manual evaluation for this answer sheet.</stringValue>
+            </value>
+        </inputParameters>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
+    <assignments>
+        <name>Set_Approval_Fields</name>
+        <label>Set Approval Fields</label>
+        <locationX>176</locationX>
+        <locationY>119</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Status__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Pending Manual Review</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Approval_Required__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>$Record.Manual_Review_Reason__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Low AI Confidence Score</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <name>Check_Confidence_Threshold</name>
+        <label>Check Confidence Threshold</label>
+        <locationX>176</locationX>
+        <locationY>599</locationY>
+        <defaultConnector>
+            <targetReference>Send_Approval_Request</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Below Threshold</defaultConnectorLabel>
+        <rules>
+            <name>Above_Threshold</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>AI_Confidence_Score</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <numberValue>70</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Auto_Approve</targetReference>
+            </connector>
+            <label>Above Threshold</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Urgency</name>
+        <label>Check Urgency</label>
+        <locationX>176</locationX>
+        <locationY>719</locationY>
+        <defaultConnector>
+            <targetReference>Notify_Senior_Evaluator</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Normal Priority</defaultConnectorLabel>
+        <rules>
+            <name>Urgent</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.ExamType__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Final Exam</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Notify_Urgent_Evaluator</targetReference>
+            </connector>
+            <label>Urgent</label>
+        </rules>
+    </decisions>
+    <description>Approval flow for handling low confidence AI evaluations that require manual review</description>
+    <formulas>
+        <name>AI_Confidence_Score</name>
+        <dataType>Number</dataType>
+        <expression>AI_Evaluation_Confidence__c</expression>
+    </formulas>
+    <formulas>
+        <name>Senior_Evaluator_Id</name>
+        <dataType>String</dataType>
+        <expression>CASE($Record.ExamType__c,
+    "CAT", "0053j0000008OlJCAU",
+    "FAT", "0053j0000008OlKCAU",
+    "Mid Term", "0053j0000008OlLCAU",
+    "Final Exam", "0053j0000008OlMCAU",
+    "0053j0000008OlNCAU"
+)</expression>
+    </formulas>
+    <interviewLabel>Approval Flow Low Confidence {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Approval Flow Low Confidence</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Auto_Approve</name>
+        <label>Auto Approve</label>
+        <locationX>400</locationX>
+        <locationY>719</locationY>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Approved</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Approval_Required__c</field>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </inputAssignments>
+        <object>AnswerSheet__c</object>
+        <inputReference>$Record</inputReference>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Notify_Urgent_Evaluator</name>
+        <label>Notify Urgent Evaluator</label>
+        <locationX>400</locationX>
+        <locationY>839</locationY>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>Urgent</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <inputReference>Create_Manual_Task</inputReference>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Set_Approval_Fields</targetReference>
+        </connector>
+        <object>AnswerSheet__c</object>
+        <recordTriggerType>CreateOrUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>AI_Evaluation_Confidence__c</name>
+        <dataType>Number</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

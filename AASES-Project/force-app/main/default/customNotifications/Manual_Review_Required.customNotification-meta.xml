@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotification xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>Manual_Review_Required</customNotifTypeName>
+    <description>Notification sent when manual review is required for answer sheet</description>
+    <desktop>true</desktop>
+    <email>true</email>
+    <masterLabel>Manual Review Required</masterLabel>
+    <mobile>true</mobile>
+</CustomNotification>

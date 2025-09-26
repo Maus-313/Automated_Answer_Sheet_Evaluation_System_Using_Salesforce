@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomNotification xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customNotifTypeName>Evaluation_Complete</customNotifTypeName>
+    <description>Notification sent when answer sheet evaluation is completed</description>
+    <desktop>true</desktop>
+    <email>true</email>
+    <masterLabel>Evaluation Complete</masterLabel>
+    <mobile>true</mobile>
+</CustomNotification>

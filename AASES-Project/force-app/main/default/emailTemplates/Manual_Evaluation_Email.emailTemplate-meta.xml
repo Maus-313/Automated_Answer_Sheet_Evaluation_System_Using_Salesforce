@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email template for manual evaluation requests</description>
+    <encodingKey>UTF-8</encodingKey>
+    <name>Manual Evaluation Email</name>
+    <style>none</style>
+    <subject>Manual Evaluation Required - Answer Sheet Review</subject>
+    <type>custom</type>
+    <uiType>A-Salesforce application</uiType>
+</EmailTemplate>

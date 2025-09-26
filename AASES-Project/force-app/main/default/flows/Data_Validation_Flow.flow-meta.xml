@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <decisions>
+        <name>Validate_Roll_Number</name>
+        <label>Validate Roll Number</label>
+        <locationX>176</locationX>
+        <locationY>119</locationY>
+        <defaultConnector>
+            <targetReference>Validate_Required_Fields</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Valid Format</defaultConnectorLabel>
+        <rules>
+            <name>Invalid_Format</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Roll_Number_Length</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <numberValue>10</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Roll_Number_Error</targetReference>
+            </connector>
+            <label>Invalid Format</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Required_Fields</name>
+        <label>Validate Required Fields</label>
+        <locationX>176</locationX>
+        <locationY>239</locationY>
+        <defaultConnector>
+            <targetReference>Check_Duplicate_Submission</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>All Required</defaultConnectorLabel>
+        <rules>
+            <name>Missing_Fields</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RollNo__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Name__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Slot__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.ExamType__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Required_Field_Error</targetReference>
+            </connector>
+            <label>Missing Fields</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Duplicate_Submission</name>
+        <label>Check Duplicate Submission</label>
+        <locationX>176</locationX>
+        <locationY>359</locationY>
+        <defaultConnector>
+            <targetReference>Validate_Answer_Quality</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No Duplicate</defaultConnectorLabel>
+        <rules>
+            <name>Duplicate_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Duplicate_Count</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Duplicate_Error</targetReference>
+            </connector>
+            <label>Duplicate Found</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Answer_Quality</name>
+        <label>Validate Answer Quality</label>
+        <locationX>176</locationX>
+        <locationY>479</locationY>
+        <defaultConnector>
+            <targetReference>Final_Validation</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Good Quality</defaultConnectorLabel>
+        <rules>
+            <name>Poor_Quality</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Empty_Answers_Count</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>7</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Add_Quality_Warning</targetReference>
+            </connector>
+            <label>Poor Quality</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Final_Validation</name>
+        <label>Final Validation</label>
+        <locationX>176</locationX>
+        <locationY>599</locationY>
+        <defaultConnector>
+            <targetReference>Allow_Save</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Valid</defaultConnectorLabel>
+        <rules>
+            <name>Has_Errors</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Error_Count</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <numberValue>0</numberValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Prevent_Save</targetReference>
+            </connector>
+            <label>Has Errors</label>
+        </rules>
+    </decisions>
+    <description>Data validation flow that validates answer sheet data before saving</description>
+    <formulas>
+        <name>Roll_Number_Length</name>
+        <dataType>Number</dataType>
+        <expression>LEN($Record.RollNo__c)</expression>
+    </formulas>
+    <formulas>
+        <name>Duplicate_Count</name>
+        <dataType>Number</dataType>
+        <expression>Duplicate_Submissions.size</expression>
+    </formulas>
+    <formulas>
+        <name>Empty_Answers_Count</name>
+        <dataType>Number</dataType>
+        <expression>IF(ISBLANK($Record.Answer1__c), 1, 0) + IF(ISBLANK($Record.Answer2__c), 1, 0) + IF(ISBLANK($Record.Answer3__c), 1, 0) + IF(ISBLANK($Record.Answer4__c), 1, 0) + IF(ISBLANK($Record.Answer5__c), 1, 0) + IF(ISBLANK($Record.Answer6__c), 1, 0) + IF(ISBLANK($Record.Answer7__c), 1, 0) + IF(ISBLANK($Record.Answer8__c), 1, 0) + IF(ISBLANK($Record.Answer9__c), 1, 0) + IF(ISBLANK($Record.Answer10__c), 1, 0)</expression>
+    </formulas>
+    <formulas>
+        <name>Error_Count</name>
+        <dataType>Number</dataType>
+        <expression>Validation_Errors.size</expression>
+    </formulas>
+    <interviewLabel>Data Validation Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Data Validation Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Duplicate_Submissions</name>
+        <label>Duplicate Submissions</label>
+        <locationX>400</locationX>
+        <locationY>359</locationY>
+        <object>AnswerSheet__c</object>
+        <filters>
+            <field>RollNo__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.RollNo__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>ExamType__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ExamType__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Slot__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Slot__c</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Id</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <outputAssignments>
+            <assignToReference>Duplicate_Count</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+        <outputReference>Duplicate_Submissions</outputReference>
+    </recordLookups>
+    <screens>
+        <name>Add_Roll_Number_Error</name>
+        <label>Add Roll Number Error</label>
+        <locationX>400</locationX>
+        <locationY>239</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <sections>
+            <id>Roll_Number_Section</id>
+            <label>Roll Number Error</label>
+            <fields>
+                <name>Roll_Number_Error</name>
+                <fieldType>DisplayText</fieldType>
+                <label>Roll Number Error</label>
+                <isRequired>false</isRequired>
+            </fields>
+        </sections>
+    </screens>
+    <screens>
+        <name>Add_Required_Field_Error</name>
+        <label>Add Required Field Error</label>
+        <locationX>600</locationX>
+        <locationY>239</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <sections>
+            <id>Required_Fields_Section</id>
+            <label>Required Fields Error</label>
+            <fields>
+                <name>Required_Fields_Error</name>
+                <fieldType>DisplayText</fieldType>
+                <label>Required Fields Error</label>
+                <isRequired>false</isRequired>
+            </fields>
+        </sections>
+    </screens>
+    <screens>
+        <name>Add_Duplicate_Error</name>
+        <label>Add Duplicate Error</label>
+        <locationX>400</locationX>
+        <locationY>479</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <sections>
+            <id>Duplicate_Section</id>
+            <label>Duplicate Submission Error</label>
+            <fields>
+                <name>Duplicate_Error</name>
+                <fieldType>DisplayText</fieldType>
+                <label>Duplicate Error</label>
+                <isRequired>false</isRequired>
+            </fields>
+        </sections>
+    </screens>
+    <screens>
+        <name>Add_Quality_Warning</name>
+        <label>Add Quality Warning</label>
+        <locationX>400</locationX>
+        <locationY>599</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <sections>
+            <id>Quality_Section</id>
+            <label>Answer Quality Warning</label>
+            <fields>
+                <name>Quality_Warning</name>
+                <fieldType>DisplayText</fieldType>
+                <label>Quality Warning</label>
+                <isRequired>false</isRequired>
+            </fields>
+        </sections>
+    </screens>
+    <screens>
+        <name>Allow_Save</name>
+        <label>Allow Save</label>
+        <locationX>400</locationX>
+        <locationY>719</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <sections>
+            <id>Success_Section</id>
+            <label>Validation Passed</label>
+            <fields>
+                <name>Success_Message</name>
+                <fieldType>DisplayText</fieldType>
+                <label>Success Message</label>
+                <isRequired>false</isRequired>
+            </fields>
+        </sections>
+    </screens>
+    <screens>
+        <name>Prevent_Save</name>
+        <label>Prevent Save</label>
+        <locationX>600</locationX>
+        <locationY>719</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>false</allowFinish>
+        <allowPause>true</allowPause>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+        <sections>
+            <id>Error_Section</id>
+            <label>Validation Errors</label>
+            <fields>
+                <name>Error_Message</name>
+                <fieldType>DisplayText</fieldType>
+                <label>Error Message</label>
+                <isRequired>false</isRequired>
+            </fields>
+        </sections>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Validate_Roll_Number</targetReference>
+        </connector>
+        <object>AnswerSheet__c</object>
+        <recordTriggerType>CreateOrUpdate</recordTriggerType>
+        <triggerType>RecordBeforeSave</triggerType>
+    </start>
+    <status>Draft</status>
+    <variables>
+        <name>Duplicate_Submissions</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>AnswerSheet__c</objectType>
+    </variables>
+    <variables>
+        <name>Validation_Errors</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>
