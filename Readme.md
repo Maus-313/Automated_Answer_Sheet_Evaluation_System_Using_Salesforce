@@ -53,8 +53,8 @@ The project is organized into 10 comprehensive phases:
 - Custom objects and fields configuration
 - Security and permissions setup
 
-### Phase 3: Data Modeling & Relationships(Under Progress)
-- Custom object design (Answer Submission, Marking Rubric, AutoGrade Result)
+### Phase 3: User Roles, Permissions, Data Modeling & Relationships
+- Custom object design (AASES Admin, AASES Evaluator, AASES Data Entry)
 - Relationship mapping
 - Record types and page layouts
 - Schema visualization
