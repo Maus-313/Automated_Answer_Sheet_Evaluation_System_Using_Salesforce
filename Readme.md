@@ -77,12 +77,6 @@ The project is organized into 10 comprehensive phases:
 - Flow Builder for complex business logic
 - Email alerts and notifications
 
-### Phase 5: Apex Programming
-- Custom Apex classes and triggers
-- SOQL/SOSL optimization
-- Asynchronous processing (Future, Queueable, Batch)
-- Exception handling and testing
-
 ### Phase 6: User Interface Development
 - Lightning App Builder configurations
 - Custom Lightning Web Components
