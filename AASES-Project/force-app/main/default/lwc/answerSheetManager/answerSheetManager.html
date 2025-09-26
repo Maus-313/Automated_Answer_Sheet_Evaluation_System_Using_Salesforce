@@ -1,0 +1,111 @@
+<template>
+    <div class="container">
+        <div class="header">
+            <h1>Answer Sheet Manager</h1>
+            <p class="subtitle">Enter student answer data for evaluation</p>
+        </div>
+
+        <div class="form-container">
+            <template if:true={showSuccess}>
+                <div class="success-message">
+                    <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                    <span>Answer Sheet saved successfully!</span>
+                </div>
+            </template>
+
+            <form class="answer-form">
+                <!-- Student Information Section -->
+                <div class="form-section">
+                    <h3>Student Information</h3>
+                    <div class="form-row">
+                        <lightning-input
+                            label="Roll Number"
+                            value={answerSheet.rollNo}
+                            data-field="rollNo"
+                            onchange={handleInputChange}
+                            required
+                            class="form-field">
+                        </lightning-input>
+
+                        <lightning-input
+                            label="Student Name"
+                            value={answerSheet.name}
+                            data-field="name"
+                            onchange={handleInputChange}
+                            required
+                            class="form-field">
+                        </lightning-input>
+                    </div>
+
+                    <div class="form-row">
+                        <lightning-combobox
+                            label="Slot"
+                            value={answerSheet.slot}
+                            options={slotOptions}
+                            data-field="slot"
+                            onchange={handleInputChange}
+                            required
+                            class="form-field">
+                        </lightning-combobox>
+
+                        <lightning-combobox
+                            label="Exam Type"
+                            value={answerSheet.examType}
+                            options={examTypeOptions}
+                            data-field="examType"
+                            onchange={handleInputChange}
+                            required
+                            class="form-field">
+                        </lightning-combobox>
+                    </div>
+                </div>
+
+                <!-- Answers Section -->
+                <div class="form-section">
+                    <h3>Student Answers</h3>
+                    <div class="answers-grid">
+                        <template for:each={answerSheet.answers} for:item="answer" for:index="index">
+                            <div key={answer.id} class="answer-field">
+                                <label class="answer-label">Question {index + 1}</label>
+                                <lightning-textarea
+                                    label=""
+                                    value={answer.value}
+                                    data-field={answer.id}
+                                    onchange={handleInputChange}
+                                    class="answer-textarea"
+                                    maxlength="32768">
+                                </lightning-textarea>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <lightning-button
+                        label="Save Answer Sheet"
+                        onclick={saveAnswerSheet}
+                        variant="brand"
+                        disabled={isLoading}
+                        class="save-button">
+                    </lightning-button>
+
+                    <lightning-button
+                        label="Reset Form"
+                        onclick={resetForm}
+                        variant="neutral"
+                        disabled={isLoading}
+                        class="reset-button">
+                    </lightning-button>
+                </div>
+
+                <template if:true={isLoading}>
+                    <div class="loading-spinner">
+                        <lightning-spinner alternative-text="Saving..." size="medium"></lightning-spinner>
+                        <p>Saving answer sheet...</p>
+                    </div>
+                </template>
+            </form>
+        </div>
+    </div>
+</template>
