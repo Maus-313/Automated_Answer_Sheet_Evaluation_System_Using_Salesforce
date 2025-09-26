@@ -6,6 +6,45 @@
         </div>
 
         <div class="form-container">
+            <!-- OCR Upload Section -->
+            <div class="ocr-section">
+                <h3>Upload Scanned Answer Sheet</h3>
+                <p class="ocr-description">Upload a scanned image of the answer sheet to automatically extract and populate the form data</p>
+
+                <div class="upload-area">
+                    <lightning-file-upload
+                        label="Upload Answer Sheet Image"
+                        name="answerSheetImage"
+                        accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff,.webp"
+                        multiple="false"
+                        onchange={handleFileUpload}
+                        disabled={isProcessingOCR}
+                        class="file-upload">
+                    </lightning-file-upload>
+
+                    <template if:true={isProcessingOCR}>
+                        <div class="ocr-processing">
+                            <lightning-spinner alternative-text="Processing..." size="small"></lightning-spinner>
+                            <span>Processing image with OCR...</span>
+                        </div>
+                    </template>
+
+                    <template if:true={ocrSuccess}>
+                        <div class="ocr-success">
+                            <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
+                            <span>OCR processing completed! Form has been populated with extracted data.</span>
+                        </div>
+                    </template>
+
+                    <template if:true={ocrError}>
+                        <div class="ocr-error">
+                            <lightning-icon icon-name="utility:error" size="small"></lightning-icon>
+                            <span>OCR processing failed: {ocrErrorMessage}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
             <template if:true={showSuccess}>
                 <div class="success-message">
                     <lightning-icon icon-name="utility:success" size="small"></lightning-icon>
@@ -64,9 +103,9 @@
                 <div class="form-section">
                     <h3>Student Answers</h3>
                     <div class="answers-grid">
-                        <template for:each={answerSheet.answers} for:item="answer" for:index="index">
+                        <template for:each={answersWithQuestionNumbers} for:item="answer" for:index="index">
                             <div key={answer.id} class="answer-field">
-                                <label class="answer-label">Question {index + 1}</label>
+                                <label class="answer-label">Question {answer.questionNumber}</label>
                                 <lightning-textarea
                                     label=""
                                     value={answer.value}

@@ -35,6 +35,98 @@
     overflow: hidden;
 }
 
+/* OCR Section Styles */
+.ocr-section {
+    padding: 25px;
+    border-bottom: 1px solid #e9ecef;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.ocr-section h3 {
+    margin: 0 0 10px 0;
+    color: #495057;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.ocr-description {
+    margin: 0 0 20px 0;
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.upload-area {
+    text-align: center;
+    padding: 20px;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.file-upload {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.ocr-processing {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    color: #495057;
+}
+
+.ocr-processing span {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.ocr-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #c3e6cb;
+    animation: slideIn 0.3s ease;
+}
+
+.ocr-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 12px 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #f5c6cb;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .form-section {
     padding: 25px;
     border-bottom: 1px solid #e9ecef;

@@ -24,6 +24,12 @@ export default class AnswerSheetManager extends LightningElement {
     @track isLoading = false;
     @track showSuccess = false;
 
+    // OCR related properties
+    @track isProcessingOCR = false;
+    @track ocrSuccess = false;
+    @track ocrError = false;
+    @track ocrErrorMessage = '';
+
     slotOptions = [
         { label: 'A1', value: 'A1' },
         { label: 'A2', value: 'A2' },
@@ -106,7 +112,9 @@ export default class AnswerSheetManager extends LightningElement {
             this.showToast('Success', 'Answer Sheet saved successfully!', 'success');
 
             // Reset form after successful save
-            this.resetForm();
+            setTimeout(() => {
+                this.resetForm();
+            }, 3000); // Delay reset to show success message
 
         } catch (error) {
             console.error('Error saving answer sheet:', error);
@@ -159,5 +167,154 @@ export default class AnswerSheetManager extends LightningElement {
 
     get hasRequiredFields() {
         return this.answerSheet.rollNo && this.answerSheet.name && this.answerSheet.slot && this.answerSheet.examType;
+    }
+
+    get answersWithQuestionNumbers() {
+        return this.answerSheet.answers.map((answer, index) => ({
+            ...answer,
+            questionNumber: index + 1
+        }));
+    }
+
+    /**
+     * Handles file upload for OCR processing
+     */
+    async handleFileUpload(event) {
+        const files = event.target.files;
+        if (files.length === 0) return;
+
+        const file = files[0];
+        this.isProcessingOCR = true;
+        this.ocrSuccess = false;
+        this.ocrError = false;
+        this.ocrErrorMessage = '';
+
+        try {
+            // Convert file to base64
+            const base64Data = await this.convertFileToBase64(file);
+
+            // Call Apex method to process the document
+            const result = await this.processOCRDocument(base64Data, file.name, file.type);
+
+            if (result.success) {
+                // Update form with extracted data
+                this.populateFormFromOCR(result.extractedData);
+                this.ocrSuccess = true;
+                this.showToast('Success', 'OCR processing completed! Form populated with extracted data.', 'success');
+            } else {
+                throw new Error(result.errorMessage || 'OCR processing failed');
+            }
+
+        } catch (error) {
+            console.error('OCR processing error:', error);
+            this.ocrError = true;
+            this.ocrErrorMessage = error.message || 'Unknown error occurred during OCR processing';
+            this.showToast('Error', 'OCR processing failed: ' + this.ocrErrorMessage, 'error');
+        } finally {
+            this.isProcessingOCR = false;
+        }
+    }
+
+    /**
+     * Converts file to base64 string
+     */
+    convertFileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64 = reader.result.split(',')[1]; // Remove data URL prefix
+                resolve(base64);
+            };
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    /**
+     * Calls Apex method to process OCR document
+     */
+    async processOCRDocument(base64Data, fileName, contentType) {
+        try {
+            // Import Apex method dynamically
+            const { uploadAndProcessDocument } = await import('c/documentProcessor');
+
+            // Call the Apex method
+            const result = await uploadAndProcessDocument({
+                fileData: base64Data,
+                fileName: fileName,
+                contentType: contentType
+            });
+
+            return result;
+
+        } catch (error) {
+            console.error('Apex call error:', error);
+            throw new Error('Failed to process document: ' + error.message);
+        }
+    }
+
+    /**
+     * Populates form fields from OCR extracted data
+     */
+    populateFormFromOCR(extractedData) {
+        // Map extracted data to form fields
+        if (extractedData.rollNo) {
+            this.answerSheet.rollNo = extractedData.rollNo;
+        }
+        if (extractedData.name) {
+            this.answerSheet.name = extractedData.name;
+        }
+        if (extractedData.slot) {
+            this.answerSheet.slot = extractedData.slot;
+        }
+        if (extractedData.examType) {
+            this.answerSheet.examType = extractedData.examType;
+        }
+
+        // Populate answers
+        for (let i = 1; i <= 10; i++) {
+            const answerKey = 'answer' + i;
+            if (extractedData[answerKey]) {
+                const answerIndex = i - 1;
+                if (this.answerSheet.answers[answerIndex]) {
+                    this.answerSheet.answers[answerIndex].value = extractedData[answerKey];
+                }
+            }
+        }
+    }
+
+    /**
+     * Resets OCR status messages
+     */
+    resetOCRStatus() {
+        this.ocrSuccess = false;
+        this.ocrError = false;
+        this.ocrErrorMessage = '';
+    }
+
+    /**
+     * Enhanced reset form that also resets OCR status
+     */
+    resetForm() {
+        this.answerSheet = {
+            rollNo: '',
+            name: '',
+            slot: '',
+            examType: '',
+            answers: [
+                { id: 'answer-1', value: '' },
+                { id: 'answer-2', value: '' },
+                { id: 'answer-3', value: '' },
+                { id: 'answer-4', value: '' },
+                { id: 'answer-5', value: '' },
+                { id: 'answer-6', value: '' },
+                { id: 'answer-7', value: '' },
+                { id: 'answer-8', value: '' },
+                { id: 'answer-9', value: '' },
+                { id: 'answer-10', value: '' }
+            ]
+        };
+        this.showSuccess = false;
+        this.resetOCRStatus();
     }
 }
