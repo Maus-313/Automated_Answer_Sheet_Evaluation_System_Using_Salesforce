@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>AnswerSheet__c</baseObject>
+    <category>Custom</category>
+    <deployed>true</deployed>
+    <description>Analysis of answer sheet submissions and processing</description>
+    <label>Answer Sheet Analysis</label>
+    <sections>
+        <label>Answer Sheet Information</label>
+        <masterLabel>Answer Sheet</masterLabel>
+    </sections>
+    <sections>
+        <label>Related Objects</label>
+        <masterLabel>Related Objects</masterLabel>
+    </sections>
+</ReportType>

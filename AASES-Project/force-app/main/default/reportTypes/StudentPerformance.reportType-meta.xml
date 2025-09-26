@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>MarkingSheet__c</baseObject>
+    <category>Custom</category>
+    <deployed>true</deployed>
+    <description>Student performance analysis and comparative metrics</description>
+    <label>Student Performance</label>
+    <sections>
+        <label>Performance Information</label>
+        <masterLabel>Performance</masterLabel>
+    </sections>
+    <sections>
+        <label>Related Objects</label>
+        <masterLabel>Related Objects</masterLabel>
+    </sections>
+</ReportType>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <baseObject>AnswerSheet__c</baseObject>
+    <category>Custom</category>
+    <deployed>true</deployed>
+    <description>System efficiency and AI accuracy metrics</description>
+    <label>System Efficiency</label>
+    <sections>
+        <label>System Information</label>
+        <masterLabel>System</masterLabel>
+    </sections>
+    <sections>
+        <label>Related Objects</label>
+        <masterLabel>Related Objects</masterLabel>
+    </sections>
+</ReportType>
