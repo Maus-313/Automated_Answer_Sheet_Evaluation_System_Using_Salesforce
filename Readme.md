@@ -112,54 +112,6 @@ The project is organized into 10 comprehensive phases:
 - Documentation and handoff
 - Portfolio showcase
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Salesforce Developer Edition account
-- Basic knowledge of Salesforce platform
-- Understanding of Apex and Lightning Web Components
-
-### Installation
-
-1. **Sign Up for Salesforce Developer Edition**
-   ```bash
-   Visit: https://developer.salesforce.com/signup
-   ```
-
-2. **Clone the Repository**
-   ```bash
-   git clone https://github.com/Maus-313/Automated_Answer_Sheet_Evaluation_System_Using_Salesforce.git
-   ```
-
-3. **Set Up Development Environment**
-   - Install Salesforce CLI
-   - Configure VS Code with Salesforce extensions
-   - Authorize your Salesforce org
-
-4. **Deploy Components**
-   - Deploy custom objects and fields
-   - Deploy Apex classes and triggers
-   - Deploy Lightning components
-   - Configure automation flows
-
-### Configuration
-
-1. **Create Custom Objects**
-   - Answer Submission
-   - Marking Rubric
-   - AutoGrade Result
-   - Re-evaluation Request
-
-2. **Set Up Security**
-   - Configure profiles and permission sets
-   - Set up sharing rules
-   - Configure field-level security
-
-3. **Configure Integrations**
-   - Set up named credentials for ML API
-   - Configure remote site settings
-   - Set up external services
-
 ## 📊 Usage
 
 ### For Students
@@ -180,85 +132,13 @@ The project is organized into 10 comprehensive phases:
 3. Generate reports and analytics
 4. Handle system maintenance and updates
 
-## 🤝 Contributing
-
-We welcome contributions to improve the Automated Answer Sheet Evaluation System! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Development Guidelines
-- Follow Salesforce best practices
-- Include comprehensive test coverage
-- Document all custom code
-- Maintain security standards
-
-## 📝 Documentation
-
-- **Overview.pdf**: Detailed project documentation and phase descriptions
-- **Phase 1.pdf**: Initial planning and analysis documentation
-- **LICENSE**: Project licensing information
-
 ## 📹 Demo Videos
 
 Watch our comprehensive demo videos to see the system in action:
 
 - **📂 Complete Demo Video Collection**: [View Demo Videos](https://drive.google.com/file/d/19zoUff2y9Zp40Mhcc0_Ey8FZ3QogHN-8/view?usp=sharing)
 
-The demo folder contains detailed walkthroughs of:
-- System setup and configuration
-- Answer sheet evaluation process
-- AI-powered grading features
-- User interface navigation
-- Reporting and analytics
 
-## 🔒 Security
-
-This system implements comprehensive security measures:
-- Role-based access control
-- Field-level security
-- Audit trails for all grading activities
-- Secure API integrations
-- Compliance with educational data standards
-
-## 📈 Performance
-
-The system is optimized for:
-- High-volume grading operations
-- Real-time processing capabilities
-- Scalable architecture
-- Efficient data management
-- API rate limit compliance
-
-## 🏆 Benefits
-
-### Educational Institutions
-- Reduced grading time by up to 80%
-- Consistent and unbiased evaluation
-- Detailed analytics and insights
-- Improved student feedback loop
-
-### Corporate Training
-- Standardized assessment across departments
-- Automated certification processes
-- Performance tracking and reporting
-- Cost-effective training evaluation
-
-## 📞 Support
-
-For support and questions:
-- Create an issue in the GitHub repository
-- Contact the development team
-- Review the documentation in the docs folder
-
-## 📄 License
-
-This project is licensed under the terms specified in the LICENSE file.
-
----
 
 **Built with ❤️ using Salesforce Platform**
 
