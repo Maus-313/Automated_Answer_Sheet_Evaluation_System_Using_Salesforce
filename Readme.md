@@ -202,6 +202,19 @@ We welcome contributions to improve the Automated Answer Sheet Evaluation System
 - **Phase 1.pdf**: Initial planning and analysis documentation
 - **LICENSE**: Project licensing information
 
+## 📹 Demo Videos
+
+Watch our comprehensive demo videos to see the system in action:
+
+- **📂 Complete Demo Video Collection**: [View Demo Videos](https://drive.google.com/drive/folders/1iYkvMyJF6IfemW3TLK6exN6Y5MT_fItO?usp=sharing)
+
+The demo folder contains detailed walkthroughs of:
+- System setup and configuration
+- Answer sheet evaluation process
+- AI-powered grading features
+- User interface navigation
+- Reporting and analytics
+
 ## 🔒 Security
 
 This system implements comprehensive security measures:
