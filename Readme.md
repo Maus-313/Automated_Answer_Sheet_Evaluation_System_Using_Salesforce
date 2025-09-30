@@ -4,7 +4,7 @@ An intelligent, AI-powered answer sheet evaluation system built on the Salesforc
 
 ## 📋 Overview
 
-This system revolutionizes traditional answer sheet evaluation by leveraging Salesforce's robust platform capabilities combined with machine learning algorithms to provide automated, accurate, and efficient grading solutions. The system supports multiple evaluation types including rubric-based grading, general grading, and provides detailed feedback to students.
+An automated answer sheet grading platform integrated with Salesforce for relationship management, user tracking, and secure sharing of student responses with instructors.
 
 ## ✨ Key Features
 
