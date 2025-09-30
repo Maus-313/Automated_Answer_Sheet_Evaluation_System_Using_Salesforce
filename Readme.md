@@ -1,10 +1,8 @@
-# Automated Answer Sheet Evaluation System Using Salesforce
-
-An intelligent, AI-powered answer sheet evaluation system built on the Salesforce platform that automates the grading process for educational institutions and corporate training programs.
+# Automated Answer Sheet Evaluation System CRM with Salesforce
 
 ## 📋 Overview
 
-An automated answer sheet grading platform integrated with Salesforce for relationship management, user tracking, and secure sharing of student responses with instructors.
+AASES is an automated answer sheet grading system; we use Salesforce separately to manage educator–student relationships, track users, and share students’ responses with instructors.
 
 ## ✨ Key Features
 
